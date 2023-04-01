@@ -25,7 +25,6 @@ class Cell():
         return (loc[0] >= 0 and loc[0] < glb.WIDTH) and (loc[1] >= 0 and loc[1] < glb.HEIGHT)
 
     def isOverlaping(self, cells, check_loc : Point) -> bool:
-        for cell
         if cells[self.loc[1] + check_loc[1]][self.loc[0] + check_loc[0]] != None:
             return True
 

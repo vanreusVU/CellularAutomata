@@ -8,31 +8,25 @@ import global_ as glb
 from utilities import Point
 
 # Initalize
+WIDTH = 720
+HEIGHT = 720 
+BLOCKSIZE = 10 
+SIZE = WIDTH, HEIGHT
+
+SCREEN = pygame.display.set_mode(SIZE)
+CLOCK = pygame.time.Clock()
 
 
 class CellularAutomata:
     def __init__(self) -> None:
-        glb.initGlobal()
-
-        glb.WIDTH = 720
-        glb.HEIGHT = 720 
-        glb.BLOCKSIZE = 10 
-        glb.SIZE = glb.WIDTH, glb.HEIGHT
-
-        glb.SCREEN = pygame.display.set_mode(glb.SIZE)
-        glb.CLOCK = pygame.time.Clock()
-
         pygame.init()
-
-        self.cells = []
-        
+        self.cells = [[0] * WIDTH/BLOCKSIZE for _ in range(HEIGHT/BLOCKSIZE)] 
         self.begin()
-        pass
 
     def begin(self) -> None:
         while True:
-            glb.SCREEN.fill(Color.BLACK)
-            #self.drawGrid()
+            # Paint the screen to @Color
+            SCREEN.fill(Color.BLACK)
 
             # Type cast
             cell : Cell
@@ -42,37 +36,35 @@ class CellularAutomata:
                 cell.applyRule(self.cells)
 
             # Draw
-            for cell in self.cells:
-                block_loc = (cell.loc[0] * glb.BLOCKSIZE), (cell.loc[1] * glb.BLOCKSIZE) 
-                temp_rect = pygame.Rect(block_loc, (glb.BLOCKSIZE,glb.BLOCKSIZE))
-                pygame.draw.rect(glb.SCREEN, cell.color, temp_rect)
+            '''for cell in self.cells:
+                block_loc = (cell.loc[0] * BLOCKSIZE), (cell.loc[1] * BLOCKSIZE) 
+                temp_rect = pygame.Rect(block_loc, (BLOCKSIZE,BLOCKSIZE))
+                pygame.draw.rect(SCREEN, cell.color, temp_rect)
+            '''
 
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:     
-                    self.spawnCell(pygame.mouse.get_pos())
-                if event.type == pygame.QUIT:
+                    print("Mouse Button pressed")
+                    #self.spawnCell(pygame.mouse.get_pos())
+                elif event.type == pygame.QUIT:
                     sys.exit()
-                
-            pygame.display.flip()
-            glb.CLOCK.tick(60)
-            
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        sys.exit()
 
+            pygame.display.flip()
+            CLOCK.tick(60)
+            
     def spawnCell(self, mouse_pos : Point) -> bool:
         block_pos = self.getBlockFromPos(mouse_pos)
       
-        # block_loc = ((block_pos[0] * glb.BLOCKSIZE)), ((block_pos[1] * glb.BLOCKSIZE) )
+        # block_loc = ((block_pos[0] * BLOCKSIZE)), ((block_pos[1] * BLOCKSIZE) )
         self.cells.append(Cell(block_pos, 0))
-        return True
-
-    def drawGrid(self) -> None:
-        for x in range(glb.WIDTH):
-            for y in range(glb.HEIGHT):
-                rect = pygame.Rect(x*glb.BLOCKSIZE, y*glb.BLOCKSIZE,glb.BLOCKSIZE, glb.BLOCKSIZE)
-                pygame.draw.rect(glb.SCREEN, Color.DARKGRAY, rect, 1)       
+        return True     
 
     def getBlockFromPos(self, mouse_pos : Point) -> Point:
-        block_x = floor(mouse_pos[0] / glb.BLOCKSIZE)
-        block_y = floor(mouse_pos[1] / glb.BLOCKSIZE)
+        block_x = floor(mouse_pos[0] / BLOCKSIZE)
+        block_y = floor(mouse_pos[1] / BLOCKSIZE)
         
         return Point(block_x, block_y)
 

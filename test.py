@@ -1,6 +1,6 @@
-from utilities import Point
+import math
 
-a = Point(0,1)
-b = Point(1,0)
-
-print(a,b, a+b,a-b,a==b,a!=b)
+for i in range(0,360,45):
+    x = math.radians(i)
+    print(i,":",round(float(math.cos(x)),2), round(float(math.sin(x)),2))
+    
